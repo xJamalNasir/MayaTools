@@ -8,9 +8,9 @@ import maya.mel as mel
 Duplicate Mesh Align
 -----------------------------
 2019/12/10
-------------------------
+-----------------------------
 Update history:
-------------------------
+-----------------------------
 Design:
 1. Make UI Function
     1 Window already exists
@@ -20,7 +20,6 @@ Design:
     5 Done
     6 Send startpos and endpos values
     7 Send number of items
-
 2. Execute Function
     1 selection is empty or not
     2 get startpos and end pos
@@ -51,11 +50,13 @@ def DMA_run():
 
     # getting the number of objects from 
     numObj = cmds.intField("CRMOD_DMA_DupNum_IFld", q=True, v=True)
-    div = numObj - 1
+    div = numObj
 
     # calculate divisions
-    div += int(not placeFirst) 
-    div += int(not placeLast) 
+    if placeFirst == True and placeLast == True:
+        div -= 1
+    elif placeFirst == False and placeLast == False:
+        div += 1
 
     print("fdiv {}".format(div))
     # get a list of selection and check if only one is selected
@@ -73,51 +74,45 @@ def DMA_run():
     selectName = tmpList[len(tmpList)-1]
 
     # 移動値取得 - the value of moving each object
+    # diffPosX = (endPosition[0] - startPosition[0])
+    # diffPosY = (endPosition[1] - startPosition[1])
+    # diffPosZ = (endPosition[2] - startPosition[2])
+
+    # addPosX = diffPosX / div
+    # addPosY = diffPosY / div
+    # addPosZ = diffPosZ / div
     for iXyz in range(3):
         differencePos.append((endPosition[iXyz] - startPosition[iXyz]))
-        addPosition.append(differencePos[iXyz] / (div))
+        addPosition.append(differencePos[iXyz] / div)
 
     iterRange = range(numObj)
+
+    offsetIndex = 0
+    if placeFirst == False:
+        offsetIndex = 1
 
     print("sdiv {}".format(div))
     # duplicate and rename
     for i in iterRange:
 
         print("iterRngBig {}".format(i))
-    
+ 
         tmpList = cmds.duplicate(selectList[0], rr=True)
-        
-        if i < 10:
-            copyName = cmds.rename(tmpList[0], (selectName + "_0" + str(i)))
-        else:
-            copyName = cmds.rename(tmpList[0], (selectName + "_" + str(i)))
 
-        # set position values for first object and skip from the remaining calculation
-        if i == 0 and placeFirst == True:
-            cmds.setAttr((copyName + ".tx"), startPosition[0])
-            cmds.setAttr((copyName + ".ty"), startPosition[1])
-            cmds.setAttr((copyName + ".tz"), startPosition[2])
-            continue
-        
-        # set position values for last object and skip from the remaining calculation
-        if i == div and  placeLast == True:
-            cmds.setAttr((copyName + ".tx"), endPosition[0])
-            cmds.setAttr((copyName + ".ty"), endPosition[1])
-            cmds.setAttr((copyName + ".tz"), endPosition[2])
-            continue
+        newCopyNumbering = "_"
+        if i < 10:
+            newCopyNumbering = "_0"
+ 
+        copyName = cmds.rename(tmpList[0], (selectName + newCopyNumbering + str(i)))
+
+        tempNewPosX = startPosition[0] + (addPosition[0] * (i + offsetIndex))
+        tempNewPosY = startPosition[1] + (addPosition[1] * (i + offsetIndex))
+        tempNewPosZ = startPosition[2] + (addPosition[2] * (i + offsetIndex))
 
         # set attributes of the remaining objects
-        newPosition = addPosition[0] * (i)
-        newPosition += startPosition[0]
-        cmds.setAttr((copyName + ".tx"), newPosition)
-
-        newPosition = addPosition[1] * (i)
-        newPosition += startPosition[1]
-        cmds.setAttr((copyName + ".ty"), newPosition)
-        
-        newPosition = addPosition[2] * (i)
-        newPosition += startPosition[2]
-        cmds.setAttr((copyName + ".tz"), newPosition)
+        cmds.setAttr((copyName + ".tx"), tempNewPosX)
+        cmds.setAttr((copyName + ".ty"), tempNewPosY)
+        cmds.setAttr((copyName + ".tz"), tempNewPosZ)
 
 # convert
 def changeLinearUnitList(cmList):
