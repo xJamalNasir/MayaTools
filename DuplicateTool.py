@@ -11,47 +11,27 @@ Duplicate Mesh Align
 ------------------------
 Update history:
 ------------------------
-
-- Confirm exactly what to do
-- Ask the guy who asked for the tool to be made if he wants the origin 
-    position to be away from the object
-
-Todo:
-- Program Design
-- Make the window and comment out the things to do in order
-- Convert to python
-- make checkbox so that the first and last aligned objects aren't overlapping, 
-    ON  - if they are have atleast three 
-    OFF - if they aren't have atleast one in the middle
-- Find ARKW meanings
-- optionVar remembers input value for the menus
-
-ASK:
-    - what is ARKW_get_optionVar line <130
-
 Design:
-Actually took 1.5 hours without checkbox and testing
 1. Make UI Function
-    1 Window already exists  5
-    2 Window Size  5
-    3 Window Layout．columnLayout, rowLayout 20
-    4 CheckBox 15
-    5 Done 5
-    6 Send startpos and endpos values 15
-    7 Send number of items 15
+    1 Window already exists
+    2 Window Size
+    3 Window Layout．columnLayout, rowLayout
+    4 CheckBox
+    5 Done
+    6 Send startpos and endpos values
+    7 Send number of items
 
 2. Execute Function
-    1 selection is empty or not   20
-    2 get startpos and end pos  30
-    3 line 38,39 what's going on? - Split names 20
+    1 selection is empty or not
+    2 get startpos and end pos
+    3 line 38,39 what's going on? - Split names
     4 // line 50 - is where you calculate the positioning of the 
-        objects(atleast two in the old code)    20
-    5 Duplicate and Rename  15
-    6 Set position of the first object and last object if check box is true    10
-    7 if unchecked set them with the remaining  10
-    8 calculate remaining 15
+        objects(atleast two in the old code)
+    5 Duplicate and Rename
+    6 Set position of the first object and last object if check box is true
+    7 if unchecked set them with the remaining
+    8 calculate remaining
 """
-
 
 def CRMOD_DMA_run():
     tmpList = []
