@@ -33,7 +33,7 @@ Design:
     8 calculate remaining
 """
 
-def CRMOD_DMA_run():
+def DMA_run():
     tmpList = []
     selectList = []
     selectList = cmds.ls(sl=True, l=True)
@@ -155,7 +155,7 @@ def getManipulatorPos(fieldGroup):
     cmds.floatFieldGrp(fieldGroup, e=True, v1=manipulatorPos[0], v2=manipulatorPos[1], v3=manipulatorPos[2])
     # optionVar and G Key repeatLast skipped
 
-def CRMOD_dupMeshAlign():
+def dupMeshAlign():
     # window element sizes
     windowWidth = 350
     windowHeight = 150
@@ -201,7 +201,7 @@ def CRMOD_dupMeshAlign():
     cmds.rowLayout(nc=3, cw3=(buttonWM, buttonWM, (buttonWM * 2)), ct3=["right", "right", "right"])
     cmds.text(l="配置数")
     cmds.intField("CRMOD_DMA_DupNum_IFld", w=buttonWM, v=2, min=2, max=99)    #CRMOD_DMA_DupNum_IFld not yet added at the end
-    cmds.button(w=buttonWM, l="Done", c="CRMOD_DMA_run()", ann="選択グループor選択メッシュモデルの整列複製")
+    cmds.button(w=buttonWM, l="Done", c="DMA_run()", ann="選択グループor選択メッシュモデルの整列複製")
     cmds.setParent( '..' )
 
     print("test")
@@ -209,4 +209,4 @@ def CRMOD_dupMeshAlign():
     cmds.showWindow()
 
 
-CRMOD_dupMeshAlign()
+dupMeshAlign()
