@@ -45,11 +45,19 @@ def DMA_run():
     placeFirst = cmds.checkBox("placeFirst", query=True, value = True)
     placeLast = cmds.checkBox("placeLast", query=True, value = True)
 
-    print("PF: {}".format(placeFirst))
-    print("PL: {}".format(placeLast))
+    cmds.scriptEditorInfo(suppressWarnings=True)
 
-    # getting the number of objects from 
     numObj = cmds.intField("CRMOD_DMA_DupNum_IFld", q=True, v=True)
+
+    print("CHOOTIYA NAKABAYASHI")
+    #info = cmds.scriptEditorInfo(query=True, suppressInfo = True)
+    #print("sasasas{}".format(info))
+    # getting the number of objects from 
+    if placeFirst == True and placeLast == True and numObj == 1:
+        cmds.intField("CRMOD_DMA_DupNum_IFld", e = True, min = 2)
+        print("CHOOTIYA NAKABAYASHI")
+        numObj = cmds.intField("CRMOD_DMA_DupNum_IFld", q=True, v=True)
+
     div = numObj
 
     # calculate divisions
@@ -58,7 +66,6 @@ def DMA_run():
     elif placeFirst == False and placeLast == False:
         div += 1
 
-    print("fdiv {}".format(div))
     # get a list of selection and check if only one is selected
     if len(selectList) is not 1:
         print("メッシュモデルorメッシュモデルを子に持つグループをひとつだけ選択してください！")
@@ -90,12 +97,8 @@ def DMA_run():
     offsetIndex = 0
     if placeFirst == False:
         offsetIndex = 1
-
-    print("sdiv {}".format(div))
     # duplicate and rename
     for i in iterRange:
-
-        print("iterRngBig {}".format(i))
  
         tmpList = cmds.duplicate(selectList[0], rr=True)
 
@@ -133,19 +136,15 @@ def changeLinearUnitList(cmList):
         else:
             returnList.append(centimeter)
 
-    print("clul {}".format(returnList))
     return returnList
 
 # get Manipulators position
 def getManipulatorPos(fieldGroup):
-    print("step 2")
     cmds.setToolTo('moveSuperContext')
     manipulatorPos = []
     # Move not added yet? Why is it needed - Because you need to put quotation marks to get pos
     manipulatorPos = cmds.manipMoveContext('Move', q=True, p=True)
-    print(manipulatorPos)
     manipulatorPos = changeLinearUnitList(manipulatorPos)
-    print("manPos {}".format(fieldGroup))
     
     cmds.floatFieldGrp(fieldGroup, e=True, v1=manipulatorPos[0], v2=manipulatorPos[1], v3=manipulatorPos[2])
     # optionVar and G Key repeatLast skipped
@@ -195,11 +194,10 @@ def dupMeshAlign():
     # Number of copies
     cmds.rowLayout(nc=3, cw3=(buttonWM, buttonWM, (buttonWM * 2)), ct3=["right", "right", "right"])
     cmds.text(l="配置数")
-    cmds.intField("CRMOD_DMA_DupNum_IFld", w=buttonWM, v=2, min=2, max=99)    #CRMOD_DMA_DupNum_IFld not yet added at the end
+    cmds.intField("CRMOD_DMA_DupNum_IFld", w=buttonWM, v=2, min=1, max=99)    #CRMOD_DMA_DupNum_IFld not yet added at the end
+    
     cmds.button(w=buttonWM, l="Done", c="DMA_run()", ann="選択グループor選択メッシュモデルの整列複製")
     cmds.setParent( '..' )
-
-    print("test")
 
     cmds.showWindow()
 
